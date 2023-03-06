@@ -1,4 +1,7 @@
 <?php
+
+
+// Check if PNG is transparent, from https://christianwood.net/posts/png-files-are-complicate/
 function isPngTransparent(string $file): bool {
 	// PNG Types
 	$PNG_GRAYSCALE = 0;
