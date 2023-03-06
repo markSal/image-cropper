@@ -9,49 +9,52 @@ function isPngTransparent(string $file): bool {
 	$PNG_PALETTE = 3;
 	$PNG_GRAYSCALE_ALPHA = 4;
 	$PNG_RGBA = 6;
-	
+
 	// Bit offsets
 	$ColorTypeOffset = 25;
-	
-  if ($colorTypeByte = file_get_contents($file, false, null, $ColorTypeOffset, 1)) {
-	$type = ord($colorTypeByte);
-	$image = imagecreatefrompng($file);
 
-	// Palette-based PNGs may have one or more values that correspond to the color to use as transparent
-	// PHP returns the first fully transparent color for palette-based images
-	$transparentColor = imagecolortransparent($image);
+	if ($colorTypeByte = file_get_contents($file, false, null, $ColorTypeOffset, 1)) {
+		$type = ord($colorTypeByte);
+		$image = imagecreatefrompng($file);
 
-	// Grayscale, RGB, and Palette-based images must define a color that will be used for transparency
-	// if none is set, we can bail early because we know it is a fully opaque image
-	if ($transparentColor === -1 && in_array($type, [$PNG_GRAYSCALE, $PNG_RGB, $PNG_PALETTE])) {
-	  return false;
-	}
+		// Palette-based PNGs may have one or more values that correspond to the color to use as transparent
+		// PHP returns the first fully transparent color for palette-based images
+		$transparentColor = imagecolortransparent($image);
 
-	$xs = imagesx($image);
-	$ys = imagesy($image);
-
-	for ($x = 0; $x < $xs; $x++) {
-	  for ($y = 0; $y < $ys; $y++) {
-		$color = imagecolorat($image, $x, $y);
-
-		if ($transparentColor === -1) {
-		  $shift = $type === $PNG_RGBA ? 3 : 1;
-		  $transparency = ($color >> ($shift * 8)) & 0x7F;
-
-		  if (
-			($type === $PNG_RGBA && $transparency !== 0) ||
-			($type === $PNG_GRAYSCALE_ALPHA && $transparency === 0)
-		  ) {
-			return true;
-		  }
-		} else if ($color === $transparentColor) {
-		  return true;
+		// Grayscale, RGB, and Palette-based images must define a color that will be used for transparency
+		// if none is set, we can bail early because we know it is a fully opaque image
+		if ($transparentColor === -1 && in_array($type, [$PNG_GRAYSCALE, $PNG_RGB, $PNG_PALETTE])) {
+			return false;
 		}
-	  }
-	}
-  }
 
-  return false;
+		$xs = imagesx($image);
+		$ys = imagesy($image);
+
+		for ($x = 0; $x < $xs; $x++){
+			
+			for ($y = 0; $y < $ys; $y++) {
+				
+				$color = imagecolorat($image, $x, $y);
+
+				if ($transparentColor === -1){
+					$shift = $type === $PNG_RGBA ? 3 : 1;
+					$transparency = ($color >> ($shift * 8)) & 0x7F;
+
+					if(
+					($type === $PNG_RGBA && $transparency !== 0) ||
+					($type === $PNG_GRAYSCALE_ALPHA && $transparency === 0)
+					){
+						return true;
+					}
+					
+				}else if ($color === $transparentColor){
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 // Loop through 15 test logos
