@@ -63,7 +63,7 @@ for($x = 1; $x <= 15; $x++){
 	fclose($output_logo);
 
 
-	// Execute James' script
+	// Execute James' imagick command
 	shell_exec('convert -bordercolor transparent -border 2x2 -trim -gravity center -bordercolor white -border 2x2 -trim -gravity center -background transparent -resize 550x360 -extent 550x360 -bordercolor transparent -border 25x20 ' . $img_src . ' output' . $x . '.png');
 
 
