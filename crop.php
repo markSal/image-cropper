@@ -1,6 +1,4 @@
 <?php
-
-
 // Checking for transparency in PNG files with PHP, from https://christianwood.net/posts/png-files-are-complicate/
 function isPngTransparent(string $file): bool {
 	// PNG Types
