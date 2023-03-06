@@ -66,7 +66,6 @@ for($x = 1; $x <= 15; $x++){
 	$output_logo = fopen($output_src, 'w') or die("Unable to open file!");
 	fclose($output_logo);
 
-
 	// Execute James' imagick command
 	shell_exec('convert -bordercolor transparent -border 2x2 -trim -gravity center -bordercolor white -border 2x2 -trim -gravity center -background transparent -resize 550x360 -extent 550x360 -bordercolor transparent -border 25x20 ' . $img_src . ' ' . $output_src);
 
@@ -85,7 +84,6 @@ for($x = 1; $x <= 15; $x++){
 	$b = $rgb & 0xFF;
 	$avg_color = imagecolorsforindex($pixel, $rgb); //you are getting the most common colors in the image
 	$hex_color = sprintf('#%02x%02x%02x', $r, $g, $b);
-
 
 	// Average color brightness
 	$color_brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
