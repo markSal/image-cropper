@@ -66,7 +66,9 @@ for($x = 1; $x <= 15; $x++){
 	// Execute James' imagick command
 	shell_exec('convert -bordercolor transparent -border 2x2 -trim -gravity center -bordercolor white -border 2x2 -trim -gravity center -background transparent -resize 550x360 -extent 550x360 -bordercolor transparent -border 25x20 ' . $img_src . ' output' . $x . '.png');
 
-
+	// Check for transparency
+	$is_transparent = isPngTransparent($img_src);
+	
 	// Average image color
 	$image = imagecreatefrompng($img_src);
 	$width = imagesx($image);
@@ -94,7 +96,7 @@ for($x = 1; $x <= 15; $x++){
 	// Output analysis data
 	echo '<h3 style="margin-bottom: 0;">Logo Analysis</h3>';
 	echo "Average color of the logo: " . '<br>';
-	echo '<div style="width: 200px; height: 200px; border: 1px solid black; background: ' . $hexColor . ';"></div>';
+	echo '<div style="width: 200px; height: 200px; border: 1px solid black; background: ' . $hex_color . ';"></div>';
 	echo '<pre>';
 		echo 'RGB:';
 		print_r($avg_color);
@@ -103,11 +105,11 @@ for($x = 1; $x <= 15; $x++){
 
 	echo "Average color brightness: " . $color_brightness . '<br>';
 
-	echo "Is the background transparent?: " . (isPngTransparent($img_src) ? 'Yes': 'No') . '<br>';
+	echo "Is the background transparent?: " . ($is_transparent ? 'Yes': 'No') . '<br>';
 
-	if(isPngTransparent($img_src) && $color_brightness > 130){
+	if($is_transparent && $color_brightness > 130){
 		$bg_color = 'Black Background';
-	}elseif(isPngTransparent($img_src) && $color_brightness <= 130){
+	}elseif($is_transparent && $color_brightness <= 130){
 		$bg_color = 'White Background';
 	}else{
 		$bg_color = 'White Background';
